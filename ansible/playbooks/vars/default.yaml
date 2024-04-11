@@ -1,6 +1,6 @@
 vcenter_hostname: "10.128.30.10"
 vcenter_username: "edeters"
-vcenter_password: ""
+vcenter_password: "Evjode123!@#"
 datacenter: "StudentDatacenter"
 cluster: "Disneyland"
 datastore: "Ursula"
@@ -11,4 +11,4 @@ resource_pool: "The-Kitchen"
 clone_name: "kube-master-node"
 
 server: "172.16.167.63"
-token: "K10a6cc8d8cbccf65e1251ebbe646dc5b20e46f8ba6a6527e6d1f887415936b5c3d::server:0f0214a4c9a4481799bbc1fc8c4fc29a"
+token: "K10743fbaed54de1779a4d45e2ec1e067ea243c445a3ec15464046bd236f1c32ea5::server:114683c502dab7cfd5ca6dd5d5a4bd79"

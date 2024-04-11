@@ -17,4 +17,13 @@
   ansible.builtin.shell: /tmp/install.sh
 
 - name: Enable and Start RKE2
-  ansible.builtin.shell: systemctl enable rke2-server.service && systemctl start rke2-server.service
+  service:
+    name: rke2-server.service
+    state: started
+    enabled: true
+
+- name: Disable firewalld
+  service:
+    name: firewalld.service
+    state: stopped
+    enabled: false

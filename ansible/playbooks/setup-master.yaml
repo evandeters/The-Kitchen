@@ -2,5 +2,13 @@
   hosts: master-node
   gather_facts: false
   become: true
+
   roles:
     - kube-master-node
+
+  tasks:
+    - shell: cat /var/lib/rancher/rke2/server/node-token
+      register: shell_result
+
+    - debug: 
+        var: shell_result.stdout_lines

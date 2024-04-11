@@ -22,12 +22,12 @@
           - name: "{{ network }}"
             connected: true
       delegate_to: localhost
-      loop:
+      loop: 
         - kube-master-node
         - kube-worker-1
         - kube-worker-2
         - kube-worker-3
-
+    
     - name: Connect interface
       community.vmware.vmware_guest_network:
         name: "{{ item }}"
@@ -42,3 +42,5 @@
         - kube-worker-1
         - kube-worker-2
         - kube-worker-3
+
+
