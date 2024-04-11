@@ -1,0 +1,8 @@
+- name: Configure RKE2 Workers
+  hosts: worker-nodes
+  gather_facts: false
+  become: true
+  vars_files:
+    - vars/default.yaml
+  roles:
+    - kube-worker-node

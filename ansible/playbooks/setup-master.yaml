@@ -1,0 +1,6 @@
+- name: Configure RKE2 Master
+  hosts: master-node
+  gather_facts: false
+  become: true
+  roles:
+    - kube-master-node

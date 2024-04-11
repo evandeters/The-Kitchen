@@ -1,0 +1,44 @@
+- name: Clone a VM from Template
+  hosts: localhost
+  gather_facts: false
+  vars_files:
+    - vars/default.yaml
+  tasks:
+    - name: Clone from Template
+      vmware_guest:
+        hostname: "{{ vcenter_hostname }}"
+        username: "{{ vcenter_username }}"
+        password: "{{ vcenter_password }}"
+        validate_certs: false
+        folder: "{{ folder }}"
+        datastore: "{{ datastore }}"
+        datacenter: "{{ datacenter }}"
+        name: "{{ item }}"
+        template: "{{ template }}"
+        state: poweredon
+        cluster: "{{ cluster }}"
+        resource_pool: "{{ resource_pool }}"
+        networks:
+          - name: "{{ network }}"
+            connected: true
+      delegate_to: localhost
+      loop:
+        - kube-master-node
+        - kube-worker-1
+        - kube-worker-2
+        - kube-worker-3
+
+    - name: Connect interface
+      community.vmware.vmware_guest_network:
+        name: "{{ item }}"
+        validate_certs: false
+        label: "Network adapter 1"
+        connected: true
+        hostname: "{{ vcenter_hostname }}"
+        username: "{{ vcenter_username }}"
+        password: "{{ vcenter_password }}"
+      loop:
+        - kube-master-node
+        - kube-worker-1
+        - kube-worker-2
+        - kube-worker-3

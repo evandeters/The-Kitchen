@@ -1,0 +1,20 @@
+---
+- name: Update Yum
+  yum: update_cache=yes
+
+- name: Change hostname
+  ansible.builtin.shell: hostname kube-master-node
+
+- name: Download Install Script
+  ansible.builtin.get_url:
+    url: "https://get.rke2.io"
+    dest: "/tmp/install.sh"
+
+- name: Make executable
+  ansible.builtin.shell: chmod +x /tmp/install.sh
+
+- name: Install RKE2
+  ansible.builtin.shell: /tmp/install.sh
+
+- name: Enable and Start RKE2
+  ansible.builtin.shell: systemctl enable rke2-server.service && systemctl start rke2-server.service
