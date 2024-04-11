@@ -1,0 +1,7 @@
+- name: Install Rancher on Cluster
+  hosts: master-node
+  gather_facts: false
+  become: true
+
+  roles:
+    - rancher
