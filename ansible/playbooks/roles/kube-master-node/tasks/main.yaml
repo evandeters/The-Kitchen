@@ -1,20 +1,9 @@
 ---
-- name: Update Yum
-  yum: update_cache=yes
-
-- name: Change hostname
-  ansible.builtin.shell: hostname kube-master-node
-
-- name: Download Install Script
-  ansible.builtin.get_url:
-    url: "https://get.rke2.io"
-    dest: "/tmp/install.sh"
-
-- name: Make executable
-  ansible.builtin.shell: chmod +x /tmp/install.sh
+- name: Update Apt
+  apt: update_cache=yes
 
 - name: Install RKE2
-  ansible.builtin.shell: /tmp/install.sh
+  ansible.builtin.shell: curl -sfL https://get.rke2.io | INSTALL_RKE2_TYPE=server sh -
 
 - name: Enable and Start RKE2
   service:
@@ -22,8 +11,28 @@
     state: started
     enabled: true
 
-- name: Disable firewalld
-  service:
-    name: firewalld.service
-    state: stopped
-    enabled: false
+- name: Setup Environment
+  ansible.builtin.shell: |
+    ln -s $(find /var/lib/rancher/rke2/bin/ -name kubectl) /usr/local/bin/kubectl
+    echo 'export KUBECONFIG="/etc/rancher/rke2/rke2.yaml"' >> /root/.bashrc
+
+- name: Install Python Packages
+  apt:
+    name: python3-pip
+    state: present
+
+- name: Install PIP3 Packages
+  ansible.builtin.pip:
+    name:
+      - kubernetes
+
+- name: Make .kube directory
+  ansible.builtin.file:
+    path: /root/.kube
+    state: directory
+
+- name: Copy Kubeconfig
+  ansible.builtin.copy:
+    src: /etc/rancher/rke2/rke2.yaml
+    dest: /root/.kube/config
+    remote_src: yes

@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: external-dns
+spec:
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: external-dns
+  template:
+    metadata:
+      labels:
+        app: external-dns
+    spec:
+      containers:
+      - name: external-dns
+        image: registry.k8s.io/external-dns/external-dns:v0.14.2
+        args:
+        - --interval=1m
+        - --log-level=info
+        - --source=service
+        - --source=ingress
+        - --source=istio-gateway        # choose one
+        - --source=istio-virtualservice # or both
+        - --policy=sync # would prevent ExternalDNS from deleting any records, omit to enable full synchronization
+        - --registry=txt
+        - --provider=rfc2136
+        - --rfc2136-host=10.128.30.20
+        - --rfc2136-port=53
+        - --rfc2136-zone=sdc.cpp
+        - --rfc2136-insecure
+        - --rfc2136-tsig-axfr

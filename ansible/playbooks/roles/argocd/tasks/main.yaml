@@ -1,0 +1,8 @@
+---
+- name: Install ArgoCD
+  shell: |
+    curl -kLs -o install.yaml https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+
+- name: Give ArgoCD Ingress
+  shell: |
+    kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "LoadBalancer"}}'

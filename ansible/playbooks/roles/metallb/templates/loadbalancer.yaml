@@ -1,0 +1,8 @@
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: critical-pool
+  namespace: metallb-system
+spec:
+  addresses:
+  - 10.128.30.150-10.128.30.200

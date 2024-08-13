@@ -1,0 +1,23 @@
+---
+- name: Install Istio
+  shell: |
+    helm repo add istio https://istio-release.storage.googleapis.com/charts
+    helm repo update
+    kubectl create namespace istio-system
+    helm install istio-base istio/base -n istio-system --set defaultRevision=default
+    helm install istiod istio/istiod -n istio-system --wait
+  environment:
+    KUBECONFIG: "/etc/rancher/rke2/rke2.yaml"
+
+- name: Install Gateway CRD
+  shell: |
+    kubectl get crd gateways.gateway.networking.k8s.io &> /dev/null || { kubectl kustomize "github.com/kubernetes-sigs/gateway-api/config/crd?ref=v1.1.0" | kubectl apply -f -; }
+  environment:
+    KUBECONFIG: "/etc/rancher/rke2/rke2.yaml"
+
+- name: Install Istio Ingress Gateway
+  shell: |
+    kubectl create namespace istio-ingress
+    helm install istio-ingress istio/gateway -n istio-ingress --wait
+  environment:
+    KUBECONFIG: "/etc/rancher/rke2/rke2.yaml"

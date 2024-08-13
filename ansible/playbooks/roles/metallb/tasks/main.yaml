@@ -1,0 +1,16 @@
+---
+- name: Install MetalLB
+  shell: |
+    kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.14.8/config/manifests/metallb-native.yaml
+  environment:
+    KUBECONFIG: "/etc/rancher/rke2/rke2.yaml"
+
+- name: Apply MetalLB YAMLs
+  kubernetes.core.k8s:
+    state: present
+    template: "{{ item }}"
+  loop:
+    - loadbalancer.yaml
+    - l2ad.yaml
+
+

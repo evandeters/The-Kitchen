@@ -1,0 +1,19 @@
+---
+- name: Install External-DNS
+  shell: |
+    helm repo add bitnami https://charts.bitnami.com/bitnami
+    helm install external-dns bitnami/external-dns \
+      --set provider=rfc2136 \
+      --set policy=sync \
+      --set registry=txt \
+      --set interval=1m \
+      --set logLevel=info \
+      --set sources="{ingress,service,istio-gateway,istio-virtualservice}" \
+      --set rfc2136.host=scar.sdc.cpp \
+      --set rfc2136.port=53 \
+      --set rfc2136.zone=sdc.cpp \
+      --set rfc2136-insecure=true \
+      --set rfc2136-tsig-axfr=true
+  environment:
+    KUBECONFIG: "/etc/rancher/rke2/rke2.yaml"
+

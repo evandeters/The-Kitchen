@@ -14,6 +14,6 @@
     helm repo add jetstack https://charts.jetstack.io
     kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v1.6.1/cert-manager.crds.yaml
     helm upgrade -i cert-manager jetstack/cert-manager --namespace cert-manager --create-namespace
-    helm upgrade -i rancher rancher-latest/rancher --create-namespace --namespace cattle-system --set hostname=rancher.dockr.life --set bootstrapPassword=bootStrapAllTheThings --set replicas=1
+    helm upgrade -i rancher rancher-latest/rancher --create-namespace --namespace cattle-system --set hostname=rancher.sdc.cpp --set bootstrapPassword=password --set replicas=1
   environment:
     KUBECONFIG: /etc/rancher/rke2/rke2.yaml

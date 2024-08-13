@@ -1,18 +1,6 @@
 ---
-- name: Configure Hostname
-  hostname:
-    name: "{{ hostname }}"
-
-- name: Download Install Script
-  ansible.builtin.get_url:
-    url: "https://get.rke2.io"
-    dest: "/tmp/install.sh"
-
 - name: Make executable
-  ansible.builtin.shell: chmod +x /tmp/install.sh
-
-- name: Install RKE2 Agent
-  ansible.builtin.shell: INSTALL_RKE2_TYPE="agent" /tmp/install.sh
+  ansible.builtin.shell: curl -sfL https://get.rke2.io | INSTALL_RKE2_TYPE=agent sh -
 
 - name: Enable RKE2 Agent
   ansible.builtin.shell: systemctl enable rke2-agent.service
@@ -21,9 +9,12 @@
   ansible.builtin.shell: mkdir -p /etc/rancher/rke2/
 
 - name: Config Agent
-  ansible.builtin.shell: |
-    echo "server: https://{{ server }}:9345" >> /etc/rancher/rke2/config.yaml
-    echo "token: {{ token }}" >> /etc/rancher/rke2/config.yaml
+  ansible.builtin.template:
+    src: config.yaml
+    dest: /etc/rancher/rke2/config.yaml
+    owner: root
+    group: root
+    mode: '0644'
 
 - name: Start node
   service:
@@ -31,8 +22,3 @@
     state: started
     enabled: true
 
-- name: Stop firewalld
-  service:
-    name: firewalld.service
-    state: stopped
-    enabled: false
